@@ -9,6 +9,8 @@ from . import views
 
 urlpatterns = [
     path('my',views.hello,name='hello'),
+    path('send-email/', views.send_email, name='send_email'),
+    path('email/', views.sucess_email, name='email_sent'),
     
     path("myvi/<int:id>/",views.my_view, name="ioerd"),
     path(

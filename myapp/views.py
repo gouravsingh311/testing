@@ -1,11 +1,38 @@
 from django.shortcuts import render
 from .models import *
 from .utils import *
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from django.http import HttpResponse,Http404
-from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_http_methods
+from .forms import *
 def hello(request):
     return HttpResponse('Hello world !')
+
+def funct(request):
+    html = f"<html><body><h1>hello world i</h1></body></html>"
+    return HttpResponse(html)
+
+
+def send_email(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            recipient = form.cleaned_data['recipient']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender = 'gs6506223@gmail.com' 
+
+            send_mail(subject, message, sender, [recipient])
+
+            return redirect('email_sent')  
+    else:
+        form = EmailForm()
+
+    return render(request, 'myapp/eamil.html', {'form': form})
+
+def sucess_email(request):
+    return render(request,'myapp/success.html')
+
 def my_view(request,id):
     try:
         obj = Reporter.objects.get(id=id)
